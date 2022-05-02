@@ -57,7 +57,10 @@ function App() {
         onSearchHandler={onSearchChange}
         placeholder="search characters"
       />
-      <Table tableData={filteredTableData} />
+      <Table
+        tableData={filteredTableData}
+        setFilteredTableData={setFilteredTableData}
+      />
     </div>
   );
 }
