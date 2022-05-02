@@ -1,0 +1,16 @@
+.td-body {
+  border-top: 1px solid #ddd;
+  padding: 8px 20px;
+}
+
+tbody tr:first-child td {
+  border-top: none;
+}
+
+tbody tr:nth-child(n) td {
+  background: #eff0f0;
+}
+
+tbody tr:nth-child(2n) td {
+  background: #fff;
+}

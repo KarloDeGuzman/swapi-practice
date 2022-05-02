@@ -1,11 +1,17 @@
 import React from "react";
 
+import "./TableHead.css";
+
 const TableHead = ({ columns }) => {
   return (
     <thead>
       <tr>
         {columns.map(({ label, field }) => {
-          return <th key={field}>{label}</th>;
+          return (
+            <th className="table-head" key={field}>
+              {label}
+            </th>
+          );
         })}
       </tr>
     </thead>

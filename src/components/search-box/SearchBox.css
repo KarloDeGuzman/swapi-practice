@@ -1,0 +1,8 @@
+.character-search-box {
+  border: 1px solid black;
+  border-radius: 0.4rem;
+  padding: 0.2rem;
+  width: 12rem;
+  line-height: 30px;
+  margin-bottom: 2rem;
+}

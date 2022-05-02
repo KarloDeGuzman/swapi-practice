@@ -1,39 +1,12 @@
-import { useEffect, useState } from "react";
 import TableBody from "../TableBody/TableBody";
 import TableHead from "../TableHead/TableHead";
 
-const Table = () => {
-  // create columns for the Table
-  // create or get data for table
-  const [tableData, setTableData] = useState([]);
-
-  useEffect(() => {
-    // TODO: NEED TO GET HOMEWORLD DATA ALSO
-    async function getData() {
-      try {
-        const characters = [];
-        const response = await fetch("https://swapi.dev/api/people");
-        const charactersData = await response.json();
-
-        // TODO: too many calls will happen for every refresh
-        // cache this somehow?
-        for (const character of charactersData.results) {
-          const homeWorldResponse = await fetch(character.homeworld);
-          const homeWorldData = await homeWorldResponse.json();
-          character.homeworld = homeWorldData.name;
-          characters.push(character);
-        }
-
-        setTableData(characters);
-      } catch (error) {
-        console.log(`Error: ${error}`);
-      }
-    }
-
-    getData();
-  }, []);
-
+import "./Table.css";
+// ultimately may be able to just use Context API rather than Redux
+const Table = ({ tableData }) => {
   // WAIT? IS THIS NEEDED?
+  // possible not to be hard coded?
+  // create columns for the Table
   const columnData = [
     {
       label: "Name",
