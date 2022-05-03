@@ -1,4 +1,4 @@
-import './TableBody.css';
+import "./TableBody.css";
 
 const TableBody = ({ columns, tableData, openModal }) => {
   return (
@@ -7,8 +7,8 @@ const TableBody = ({ columns, tableData, openModal }) => {
         return (
           <tr key={data.name}>
             {columns.map(({ field }) => {
-              const tData = data[field] ? data[field] : '----';
-              if (field.toUpperCase() === 'HOMEWORLD') {
+              const tData = data[field] ? data[field] : "----";
+              if (field.toUpperCase() === "HOMEWORLD") {
                 return (
                   <td
                     className="td-body"

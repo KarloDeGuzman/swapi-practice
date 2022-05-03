@@ -11,9 +11,8 @@ const Modal = ({ setShowModal, singlePlanetData }) => {
     }
   };
 
-  console.log('singlePlanetData: ', singlePlanetData);
   const { name, diameter, climate, population } = singlePlanetData[0];
-  console.log(name);
+
   return ReactDom.createPortal(
     <div className="modal-container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
