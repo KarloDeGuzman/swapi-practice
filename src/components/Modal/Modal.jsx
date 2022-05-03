@@ -1,8 +1,8 @@
-import { useRef } from "react";
-import ReactDom from "react-dom";
+import { useRef } from 'react';
+import ReactDom from 'react-dom';
 
-import "./Modal.css";
-const Modal = ({ setShowModal }) => {
+import './Modal.css';
+const Modal = ({ setShowModal, singlePlanetData }) => {
   // close the modal when clicking outside the modal
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -11,14 +11,20 @@ const Modal = ({ setShowModal }) => {
     }
   };
 
+  console.log('singlePlanetData: ', singlePlanetData);
+  const { name, diameter, climate, population } = singlePlanetData[0];
+  console.log(name);
   return ReactDom.createPortal(
     <div className="modal-container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
-        <h2>Planet Name: Whatever</h2>
+        <h2>Planet Name: {name}</h2>
+        <h2>Diameter: {diameter}</h2>
+        <h2>Climate: {climate}</h2>
+        <h2>Population: {population}</h2>
         <button onClick={() => setShowModal(false)} />
       </div>
     </div>,
-    document.getElementById("portal")
+    document.getElementById('portal'),
   );
 };
 
