@@ -1,8 +1,6 @@
-import React from "react";
-
 import "./TableBody.css";
 
-const TableBody = ({ columns, tableData }) => {
+const TableBody = ({ columns, tableData, openModal }) => {
   return (
     <tbody>
       {tableData.map((data) => {
@@ -12,11 +10,7 @@ const TableBody = ({ columns, tableData }) => {
               const tData = data[field] ? data[field] : "----";
               if (field.toUpperCase() === "HOMEWORLD") {
                 return (
-                  <td
-                    className="td-body"
-                    key={field}
-                    onClick={() => alert("HELLO")}
-                  >
+                  <td className="td-body" key={field} onClick={openModal}>
                     {tData}
                   </td>
                 );

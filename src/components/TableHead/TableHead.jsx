@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import "./TableHead.css";
 
@@ -12,6 +12,7 @@ const TableHead = ({ columns, handleSorting }) => {
     setOrder(sortOrder);
     handleSorting(field, sortOrder);
   };
+
   return (
     <thead>
       <tr>

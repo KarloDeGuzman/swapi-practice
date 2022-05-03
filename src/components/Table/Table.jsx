@@ -4,9 +4,8 @@ import TableHead from "../TableHead/TableHead";
 import "./Table.css";
 
 // ultimately may be able to just use Context API rather than Redux
-const Table = ({ tableData, setFilteredTableData }) => {
+const Table = ({ tableData, setFilteredTableData, openModal }) => {
   const handleSorting = (sortField, sortOrder) => {
-    console.log(sortField);
     if (sortField) {
       const sorted = [...tableData].sort((a, b) => {
         // if there are null values handle cases for sorting
@@ -22,10 +21,7 @@ const Table = ({ tableData, setFilteredTableData }) => {
       });
 
       setFilteredTableData(sorted);
-      console.log("sorted", sorted);
     }
-
-    console.log(sortField, sortOrder);
   };
 
   // WAIT? IS THIS NEEDED?
@@ -68,7 +64,11 @@ const Table = ({ tableData, setFilteredTableData }) => {
     <>
       <table className="table">
         <TableHead columns={columnData} handleSorting={handleSorting} />
-        <TableBody columns={columnData} tableData={tableData} />
+        <TableBody
+          columns={columnData}
+          tableData={tableData}
+          openModal={openModal}
+        />
       </table>
     </>
   );

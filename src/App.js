@@ -2,15 +2,21 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import SearchBox from "./components/search-box/SearchBox";
 import Table from "./components/Table/Table";
+import Modal from "./components/Modal/Modal";
 
 function App() {
   // create or get data for table and/or filtered data
   const [searchField, setSearchField] = useState("");
   const [tableData, setTableData] = useState([]);
   const [filteredTableData, setFilteredTableData] = useState(tableData);
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
 
   // place useEffect here?
-  // COntextAPI definitely needed, datas are being passed from parent to child to child etc
+  // ContextAPI definitely needed, datas are being passed from parent to child to child etc
   useEffect(() => {
     const newFilteredTableData = tableData.filter((data) => {
       return data.name.toLocaleLowerCase().includes(searchField);
@@ -36,6 +42,7 @@ function App() {
         }
 
         setTableData(characters);
+        console.log(characters);
       } catch (error) {
         console.log(`Error: ${error}`);
       }
@@ -60,7 +67,9 @@ function App() {
       <Table
         tableData={filteredTableData}
         setFilteredTableData={setFilteredTableData}
+        openModal={openModal}
       />
+      {showModal ? <Modal setShowModal={setShowModal} /> : null}
     </div>
   );
 }
