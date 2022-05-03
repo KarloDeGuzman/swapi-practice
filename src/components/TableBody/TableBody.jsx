@@ -1,6 +1,18 @@
 import "./TableBody.css";
+import { useDispatch } from "react-redux";
+import {
+  updateModal,
+  updatePlanetName,
+} from "../../features/global/globalSlice";
 
-const TableBody = ({ columns, tableData, openModal }) => {
+const TableBody = ({ columns, tableData }) => {
+  const dispatch = useDispatch();
+
+  const handleModalData = (planetName) => {
+    dispatch(updateModal(true));
+    dispatch(updatePlanetName(planetName));
+  };
+
   return (
     <tbody>
       {tableData.map((data) => {
@@ -13,7 +25,7 @@ const TableBody = ({ columns, tableData, openModal }) => {
                   <td
                     className="td-body"
                     key={field}
-                    onClick={() => openModal(tData)}
+                    onClick={() => handleModalData(tData)}
                   >
                     {tData}
                   </td>

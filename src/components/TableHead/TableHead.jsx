@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateSort } from "../../features/global/globalSlice";
 
 import "./TableHead.css";
 
-const TableHead = ({ columns, handleSorting }) => {
-  const [sortField, setSortField] = useState("");
-  const [order, setOrder] = useState("asc");
+const TableHead = ({ columns }) => {
+  const dispatch = useDispatch();
+
+  const order = useSelector((state) => state.global.sortOrder);
+  const sortField = useSelector((state) => state.global.sortKey);
 
   const handleSortingChange = (field) => {
     const sortOrder = field === sortField && order === "asc" ? "desc" : "asc";
-    setSortField(field);
-    setOrder(sortOrder);
-    handleSorting(field, sortOrder);
+    dispatch(updateSort({ sortKey: field, sortOrder }));
   };
 
   return (

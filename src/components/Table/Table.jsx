@@ -3,30 +3,7 @@ import TableHead from "../TableHead/TableHead";
 
 import "./Table.css";
 
-// ultimately may be able to just use Context API rather than Redux
-const Table = ({ tableData, setFilteredTableData, openModal }) => {
-  const handleSorting = (sortField, sortOrder) => {
-    if (sortField) {
-      const sorted = [...tableData].sort((a, b) => {
-        // if there are null values handle cases for sorting
-        if (a[sortField] === null) return 1;
-        if (b[sortField] === null) return -1;
-        if (a[sortField] === null && b[sortField] === null) return 0;
-
-        return (
-          a[sortField].toString().localeCompare(b[sortField].toString(), "en", {
-            numeric: true,
-          }) * (sortOrder === "asc" ? 1 : -1)
-        );
-      });
-
-      setFilteredTableData(sorted);
-    }
-  };
-
-  // WAIT? IS THIS NEEDED?
-  // possible not to be hard coded?
-  // create columns for the Table
+const Table = ({ tableData }) => {
   const columnData = [
     {
       label: "Name",
@@ -63,12 +40,8 @@ const Table = ({ tableData, setFilteredTableData, openModal }) => {
   return (
     <>
       <table className="table">
-        <TableHead columns={columnData} handleSorting={handleSorting} />
-        <TableBody
-          columns={columnData}
-          tableData={tableData}
-          openModal={openModal}
-        />
+        <TableHead columns={columnData} />
+        <TableBody columns={columnData} tableData={tableData} />
       </table>
     </>
   );

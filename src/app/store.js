@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import charactersReducer from "../features/characters/charactersSlice";
+import globalReducer from "../features/global/globalSlice";
 
 export const store = configureStore({
   reducer: {
-    characters: charactersReducer,
+    global: globalReducer,
   },
 });
