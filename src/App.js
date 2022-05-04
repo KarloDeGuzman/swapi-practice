@@ -24,7 +24,7 @@ const App = () => {
     <div className="App">
       <h1>Star Wars Characters</h1>
       <SearchBox />
-      <Table />
+      {charactersAPIStatus === "loading" ? <h2>Loading...</h2> : <Table />}
       {showModal ? <Modal /> : null}
     </div>
   );
