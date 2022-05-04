@@ -1,11 +1,12 @@
 import "./TableBody.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   updateModal,
   updatePlanetName,
+  selectSortedAndFilterableCharacters,
 } from "../../features/global/globalSlice";
 
-const TableBody = ({ columns, tableData }) => {
+const TableBody = ({ columns }) => {
   const dispatch = useDispatch();
 
   const handleModalData = (planetName) => {
@@ -13,9 +14,13 @@ const TableBody = ({ columns, tableData }) => {
     dispatch(updatePlanetName(planetName));
   };
 
+  const sortableCharacters = useSelector((state) =>
+    selectSortedAndFilterableCharacters(state),
+  );
+
   return (
     <tbody>
-      {tableData.map((data) => {
+      {sortableCharacters.map((data) => {
         return (
           <tr key={data.name}>
             {columns.map(({ field }) => {
@@ -23,7 +28,7 @@ const TableBody = ({ columns, tableData }) => {
               if (field.toUpperCase() === "HOMEWORLD") {
                 return (
                   <td
-                    className="td-body"
+                    className="td-body td-planetName"
                     key={field}
                     onClick={() => handleModalData(tData)}
                   >

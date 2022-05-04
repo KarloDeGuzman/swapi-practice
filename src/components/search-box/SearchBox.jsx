@@ -1,12 +1,22 @@
+import { useDispatch } from "react-redux";
+import { updateSearchField } from "../../features/global/globalSlice";
 import "./SearchBox.css";
-const SearchBox = ({ onSearchHandler, className, placeholder }) => {
+
+const SearchBox = () => {
+  const dispatch = useDispatch();
+
+  const onSearchChangeHandler = (event) => {
+    const searchFieldString = event.target.value.toLocaleLowerCase();
+    dispatch(updateSearchField(searchFieldString));
+  };
+
   return (
     <div>
       <input
-        className={className}
+        className="character-search-box"
+        placeholder="search characters"
         type="search"
-        placeholder={placeholder}
-        onChange={onSearchHandler}
+        onChange={onSearchChangeHandler}
       />
     </div>
   );

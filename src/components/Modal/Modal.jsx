@@ -7,7 +7,7 @@ import {
 } from "../../features/global/globalSlice";
 
 import "./Modal.css";
-const Modal = ({ singlePlanetData }) => {
+const Modal = () => {
   const dispatch = useDispatch();
 
   const planetDetails = useSelector((state) => getPlanetDetails(state));
@@ -22,17 +22,42 @@ const Modal = ({ singlePlanetData }) => {
 
   const { name, diameter, climate, population } = planetDetails[0];
 
+  const formatNumberWithCommas = (value) => {
+    if (!isNaN(value)) {
+      return parseInt(value).toLocaleString();
+    }
+
+    return value;
+  };
+
   return ReactDom.createPortal(
     <div className="modal-container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
-        <h2>Planet Name: {name}</h2>
-        <h2>Diameter: {diameter}</h2>
-        <h2>Climate: {climate}</h2>
-        <h2>Population: {population}</h2>
-        <button onClick={() => dispatch(updateModal(false))} />
+        <h2>
+          Planet Name: <span className="planet-text-detail">{name}</span>
+        </h2>
+        <h2>
+          Diameter:{" "}
+          <span className="planet-text-detail">
+            {formatNumberWithCommas(diameter)}
+          </span>
+        </h2>
+        <h2>
+          Climate: <span className="planet-text-detail">{climate}</span>
+        </h2>
+        <h2>
+          Population:{" "}
+          <span className="planet-text-detail">
+            {formatNumberWithCommas(population)}
+          </span>
+        </h2>
+        <button
+          className="modal-close-button"
+          onClick={() => dispatch(updateModal(false))}
+        />
       </div>
     </div>,
-    document.getElementById("portal")
+    document.getElementById("portal"),
   );
 };
 

@@ -6,6 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 
+// due to the features of React.StrictMode, components render twice for development purposes
+// to find accidental side effects in the render phase
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

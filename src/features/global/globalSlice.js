@@ -1,5 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+} from "@reduxjs/toolkit";
 
+// if caching, check for localStorage to fill up characters, planets etc
+// else continue with call
 const initialState = {
   characters: [],
   planets: [],
@@ -9,8 +15,12 @@ const initialState = {
   sortOrder: "asc",
   isModalOpen: false,
   planetName: "",
+  searchField: "",
 };
 
+// implement some sort of caching?
+// IDEA: adding to localStorage and search for localstorage first
+// if doesn't exist continue with api call
 export const getCharacters = createAsyncThunk(
   "global/getCharacters",
   async (_, thunkAPI) => {
@@ -38,10 +48,9 @@ export const getCharacters = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
-// find a way to not repeat here
 export const getPlanets = createAsyncThunk(
   "global/getPlanets",
   async (_, thunkAPI) => {
@@ -82,7 +91,7 @@ export const getPlanets = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const globalSlice = createSlice({
@@ -103,6 +112,9 @@ export const globalSlice = createSlice({
     },
     updatePlanetName: (state, action) => {
       state.planetName = action.payload;
+    },
+    updateSearchField: (state, action) => {
+      state.searchField = action.payload;
     },
   },
   extraReducers(builder) {
@@ -125,59 +137,130 @@ export const globalSlice = createSlice({
   },
 });
 
-//TODO: memoize these calls
+/* SELECTOR FUNCTIONS*/
 export const selectAllCharacters = (state) => state.global.characters;
-
 export const selectAllPlanets = (state) => state.global.planets;
+export const selectSortKey = (state) => state.global.sortKey;
+export const selectSortOrder = (state) => state.global.sortOrder;
 
-export const filterCharacters = (state, searchField) => {
-  const allCharacters = state.global.characters;
+// OLD filterCharacters
+// export const filterCharacters = (state, searchField) => {
+//   const allCharacters = state.global.characters;
 
-  if (searchField === "") {
-    return allCharacters;
-  } else {
-    return allCharacters.filter((character) => {
-      return character.name.toLocaleLowerCase().includes(searchField);
-    });
-  }
-};
+//   if (searchField === "") {
+//     return allCharacters;
+//   } else {
+//     return allCharacters.filter((character) => {
+//       return character.name.toLocaleLowerCase().includes(searchField);
+//     });
+//   }
+// };
 
-export const sortFilterableCharacters = (state, filteredCharacters) => {
-  if (filteredCharacters.length === 0) return state.global.characters;
+// NEW memoized selector filterCharacters
+export const selectFilteredCharcters = createSelector(
+  [selectAllCharacters, (state) => state.global.searchField],
+  (allCharacters, searchField) => {
+    if (searchField === "") {
+      return allCharacters;
+    } else {
+      return allCharacters.filter((character) => {
+        return character.name.toLocaleLowerCase().includes(searchField);
+      });
+    }
+  },
+);
 
-  if (state.global.sortKey) {
-    const sortedCharacters = [...filteredCharacters].sort((a, b) => {
-      // if there are null values handle cases for sorting
-      if (a[state.global.sortKey] === null) return 1;
-      if (b[state.global.sortKey] === null) return -1;
-      if (
-        a[state.global.sortKey] === null &&
-        b[state.global.sortKey] === null
-      ) {
-        return 0;
-      }
+// OLD sortFilterableCharacters
+// export const sortFilterableCharacters = (state, filteredCharacters) => {
+//   if (filteredCharacters.length === 0) return state.global.characters;
 
-      return (
-        a[state.global.sortKey]
-          .toString()
-          .localeCompare(b[state.global.sortKey].toString(), "en", {
+//   if (state.global.sortKey) {
+//     const sortedCharacters = [...filteredCharacters].sort((a, b) => {
+//       // if there are null values handle cases for sorting
+//       if (a[state.global.sortKey] === null) return 1;
+//       if (b[state.global.sortKey] === null) return -1;
+//       if (
+//         a[state.global.sortKey] === null &&
+//         b[state.global.sortKey] === null
+//       ) {
+//         return 0;
+//       }
+
+//       // able to sort strings, dates, numbers without creating sorting methods for each column
+//       return (
+//         a[state.global.sortKey]
+//           .toString()
+//           .localeCompare(b[state.global.sortKey].toString(), "en", {
+//             numeric: true,
+//           }) * (state.global.sortOrder === "asc" ? 1 : -1)
+//       );
+//     });
+
+//     return sortedCharacters;
+//   }
+
+//   return filteredCharacters;
+// };
+
+// NEW memoized selector sortFilterableCharacters
+export const selectSortedAndFilterableCharacters = createSelector(
+  [
+    selectAllCharacters,
+    selectFilteredCharcters,
+    selectSortKey,
+    selectSortOrder,
+  ],
+  (allCharacters, filteredCharacters, sortKey, sortOrder) => {
+    if (filteredCharacters.length === 0) return [...allCharacters];
+
+    if (sortKey) {
+      const sortedCharacters = [...filteredCharacters].sort((a, b) => {
+        // if there are null values handle cases for sorting
+        if (a[sortKey] === null) return 1;
+        if (b[sortKey] === null) return -1;
+        if (a[sortKey] === null && b[sortKey] === null) {
+          return 0;
+        }
+
+        // able to sort strings, dates, numbers without creating sorting methods for each column
+        return (
+          a[sortKey].toString().localeCompare(b[sortKey].toString(), "en", {
             numeric: true,
-          }) * (state.global.sortOrder === "asc" ? 1 : -1)
-      );
-    });
+          }) * (sortOrder === "asc" ? 1 : -1)
+        );
+      });
 
-    return sortedCharacters;
-  }
+      return sortedCharacters;
+    }
 
-  return filteredCharacters;
-};
+    return [...filteredCharacters];
+  },
+);
 
-export const getPlanetDetails = (state) => {
-  const planets = state.global.planets;
+// OLD getPlanetDetails
+// export const getPlanetDetails = (state) => {
+//   const planets = state.global.planets;
 
-  return planets.filter((planet) => planet.name === state.global.planetName);
-};
+//   return planets.filter((planet) => planet.name === state.global.planetName);
+// };
 
-export const { reset, updateSort, updateModal, updatePlanetName } =
-  globalSlice.actions;
+// NEW getPlanetDetails
+// memomizing previous set of inputs and the calculated result
+export const getPlanetDetails = createSelector(
+  [selectAllPlanets, (state) => state.global.planetName],
+  (planets, planetName) =>
+    planets.filter(
+      (planet) =>
+        planet.name.toLocaleLowerCase() === planetName.toLocaleLowerCase(),
+    ),
+);
+
+export const {
+  reset,
+  updateSort,
+  updateModal,
+  updatePlanetName,
+  updateSearchField,
+} = globalSlice.actions;
+
 export default globalSlice.reducer;

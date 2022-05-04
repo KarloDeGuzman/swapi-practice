@@ -3,7 +3,7 @@ import TableHead from "../TableHead/TableHead";
 
 import "./Table.css";
 
-const Table = ({ tableData }) => {
+const Table = () => {
   const columnData = [
     {
       label: "Name",
@@ -41,7 +41,7 @@ const Table = ({ tableData }) => {
     <>
       <table className="table">
         <TableHead columns={columnData} />
-        <TableBody columns={columnData} tableData={tableData} />
+        <TableBody columns={columnData} />
       </table>
     </>
   );
