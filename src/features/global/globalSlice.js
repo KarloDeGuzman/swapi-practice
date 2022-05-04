@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 
 // if caching, check for localStorage to fill up characters, planets etc
-// else continue with call
+// else continue with api call
 const initialState = {
   characters: [],
   planets: [],
@@ -55,6 +55,7 @@ export const getPlanets = createAsyncThunk(
   "global/getPlanets",
   async (_, thunkAPI) => {
     const planets = [];
+
     try {
       const response = await fetch("https://swapi.dev/api/people");
       const charactersData = await response.json();
